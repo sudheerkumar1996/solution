@@ -36,7 +36,6 @@ const S = {
     background-color: #fff;
     box-shadow: 0 2px 7px rgba(5, 66, 145, 0.13);
     transition: box-shadow 0.3s ease-in-out;
-
     &:hover {
       box-shadow: 0 2px 7px rgba(5, 66, 145, 0.26);
     }

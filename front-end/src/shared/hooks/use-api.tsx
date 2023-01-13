@@ -14,7 +14,6 @@ export function useApi<ReturnType = {}>({ url, initialLoadState = "loading" }: O
   const callApi = useCallback(
     async (params?: object) => {
       dispatch({ type: "loading" })
-
       function process(result: ApiResponse<ReturnType>) {
         if (result.success) {
           dispatch({ type: "success", result: result })
@@ -22,7 +21,6 @@ export function useApi<ReturnType = {}>({ url, initialLoadState = "loading" }: O
           dispatch({ type: "error", error: result.error })
         }
       }
-
       switch (url) {
         case "get-homeboard-students":
           return getHomeboardStudents().then(process)
