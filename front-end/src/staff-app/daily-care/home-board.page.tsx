@@ -55,10 +55,14 @@ export const HomeBoardPage: React.FC = () => {
   }
   const onSearchName = (key: string) => {
     setKey(key)
-    let all_students: Person[] = [...(data?.students || [])]
     if (key.trim().length !== 0) {
-      setStudents(all_students.filter((student) => PersonHelper.getFullName(student).toLowerCase().includes(key.toLowerCase())))
+      let all_students: Person[] = [...(data?.students || [])]
+      let filteredByName:Person[] =all_students.filter((student) => PersonHelper.getFullName(student).toLowerCase().includes(key.toLowerCase()))
+      filteredByName = ascending ? filteredByName.sort((a, b) => (a[name] > b[name] ? 1 : -1)) : filteredByName.sort((a, b) => (a[name] < b[name] ? 1 : -1))
+      setStudents(filteredByName)
     } else {
+      let all_students: Person[] = [...(data?.students || [])]
+      all_students = ascending ? all_students.sort((a, b) => (a[name] > b[name] ? 1 : -1)) : all_students.sort((a, b) => (a[name] < b[name] ? 1 : -1))
       setStudents(all_students)
     }
   }
