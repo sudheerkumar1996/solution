@@ -8,17 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
 import { Colors } from "shared/styles/colors"
 import { CenteredContainer } from "shared/components/centered-container/centered-container.component"
-import { Person, PersonHelper } from "shared/models/person"
+import { Person, PersonHelper, StudentName } from "shared/models/person"
 import { useApi } from "shared/hooks/use-api"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
 import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-
+import { filterStudentByName, sortHelperFun } from "shared/helpers/data-generation"
 export const HomeBoardPage: React.FC = () => {
   const [isRollMode, setIsRollMode] = useState(false)
   const [searchKey, setKey] = useState<string>("")
-  const [name, setName] = useState<student_name>("first_name")
+  const [name, setName] = useState<StudentName>("first_name")
   const [ascending, setAscending] = useState<boolean>(true)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
   const [allStudents, setStudents] = useState<Person[]>([])
@@ -30,20 +30,16 @@ export const HomeBoardPage: React.FC = () => {
     setStudents(students_.sort((a, b) => (a.first_name > b.first_name ? 1 : -1)))
   }, [data])
 
-  const onToolbarAction = (action: ToolbarAction, value: student_name) => {
-    let data_ = [...allStudents]
+  const onToolbarAction = (action: ToolbarAction, value: StudentName) => {
     if (action === "roll") {
       setIsRollMode(true)
     }
     if (action === "sort") {
-      let sorted = !ascending ? data_.sort((a, b) => (a[name] > b[name] ? 1 : -1)) : data_.sort((a, b) => (a[name] < b[name] ? 1 : -1))
+      setStudents(sortHelperFun(!ascending, allStudents, name))
       setAscending(!ascending)
-      setStudents(sorted)
     }
     if (action === "toggle") {
-      let sorted = []
-      sorted = ascending ? data_.sort((a, b) => (a[value] > b[value] ? 1 : -1)) : data_.sort((a, b) => (a[value] < b[value] ? 1 : -1))
-      setStudents(sorted)
+      setStudents(sortHelperFun(ascending, allStudents, value))
       setName(value)
     }
   }
@@ -55,18 +51,13 @@ export const HomeBoardPage: React.FC = () => {
   }
   const onSearchName = (key: string) => {
     setKey(key)
+    let all_students: Person[] = [...(data?.students || [])]
     if (key.trim().length !== 0) {
-      let all_students: Person[] = [...(data?.students || [])]
-      let filteredByName:Person[] =all_students.filter((student) => PersonHelper.getFullName(student).toLowerCase().includes(key.toLowerCase()))
-      filteredByName = ascending ? filteredByName.sort((a, b) => (a[name] > b[name] ? 1 : -1)) : filteredByName.sort((a, b) => (a[name] < b[name] ? 1 : -1))
-      setStudents(filteredByName)
+      setStudents(sortHelperFun(ascending, filterStudentByName(all_students, key), name))
     } else {
-      let all_students: Person[] = [...(data?.students || [])]
-      all_students = ascending ? all_students.sort((a, b) => (a[name] > b[name] ? 1 : -1)) : all_students.sort((a, b) => (a[name] < b[name] ? 1 : -1))
-      setStudents(all_students)
+      setStudents(sortHelperFun(ascending, all_students, name))
     }
   }
-  // console.log("all data", data)
   return (
     <>
       <S.PageContainer>
@@ -98,11 +89,10 @@ export const HomeBoardPage: React.FC = () => {
 }
 
 type ToolbarAction = "roll" | "sort" | "toggle"
-type student_name = "first_name" | "last_name"
 interface ToolbarProps {
   ascending: boolean
-  name: student_name
-  onItemClick: (action: ToolbarAction, value: student_name) => void
+  name: StudentName
+  onItemClick: (action: ToolbarAction, value: StudentName) => void
   searchKey: string
   onSearchName: (key: string) => void
 }
@@ -167,9 +157,9 @@ const S = {
       font-weight: ${FontWeight.normal};
       border-radius: ${BorderRadius.default};
       background-color: white;
-      height:30px;
-      width:100px;
-      margin:0,
+      height: 30px;
+      width: 100px;
+      margin: 0;
     }
   `,
 }

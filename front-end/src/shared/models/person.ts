@@ -8,3 +8,5 @@ export interface Person {
 export const PersonHelper = {
   getFullName: (p: Person) => `${p.first_name} ${p.last_name}`,
 }
+export type StudentName = "first_name" | "last_name"
+
