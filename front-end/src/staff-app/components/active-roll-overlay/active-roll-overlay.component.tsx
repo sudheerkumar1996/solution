@@ -3,15 +3,18 @@ import styled from "styled-components"
 import Button from "@material-ui/core/Button"
 import { BorderRadius, Spacing } from "shared/styles/styles"
 import { RollStateList } from "staff-app/components/roll-state/roll-state-list.component"
-
+import { Person } from "shared/models/person"
+import { ItemType } from "shared/models/roll"
 export type ActiveRollAction = "filter" | "exit"
 interface Props {
+  allStudents: Person[]
   isActive: boolean
   onItemClick: (action: ActiveRollAction, value?: string) => void
+  filterStudentOnRoll: (type: ItemType) => void
 }
 
 export const ActiveRollOverlay: React.FC<Props> = (props) => {
-  const { isActive, onItemClick } = props
+  const { isActive, onItemClick, allStudents, filterStudentOnRoll } = props
 
   return (
     <S.Overlay isActive={isActive}>
@@ -19,11 +22,12 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
         <div>Class Attendance</div>
         <div>
           <RollStateList
+            filterStudentOnRoll={filterStudentOnRoll}
             stateList={[
-              { type: "all", count: 0 },
-              { type: "present", count: 0 },
-              { type: "late", count: 0 },
-              { type: "absent", count: 0 },
+              { type: "all", count: allStudents.length },
+              { type: "present", count: allStudents.filter((std) => std.status === "present").length },
+              { type: "late", count: allStudents.filter((std) => std.status === "late").length },
+              { type: "absent", count: allStudents.filter((std) => std.status === "absent").length },
             ]}
           />
           <div style={{ marginTop: Spacing.u6 }}>

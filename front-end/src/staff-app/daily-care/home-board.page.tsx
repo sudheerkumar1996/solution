@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import Button from "@material-ui/core/ButtonBase"
 import InputBase from "@material-ui/core/InputBase"
-
 import { RadioGroup, Radio, FormControlLabel } from "@material-ui/core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
@@ -15,7 +14,9 @@ import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
 import { filterStudentByName, sortHelperFun } from "shared/helpers/data-generation"
+import { ItemType } from "shared/models/roll"
 export const HomeBoardPage: React.FC = () => {
+  const [filterRollState, setRollState] = useState<ItemType>("all")
   const [isRollMode, setIsRollMode] = useState(false)
   const [searchKey, setKey] = useState<string>("")
   const [name, setName] = useState<StudentName>("first_name")
@@ -45,6 +46,7 @@ export const HomeBoardPage: React.FC = () => {
   }
 
   const onActiveRollAction = (action: ActiveRollAction) => {
+    console.log("fgkjgjgjh", action)
     if (action === "exit") {
       setIsRollMode(false)
     }
@@ -57,6 +59,12 @@ export const HomeBoardPage: React.FC = () => {
     } else {
       setStudents(sortHelperFun(ascending, all_students, name))
     }
+  }
+  const onStateChange = (student: Person) => {
+    setStudents(allStudents.map((std) => (std.id === student.id ? student : std)))
+  }
+  const filterStudentOnRoll = (type: ItemType) => {
+    setRollState(type)
   }
   return (
     <>
@@ -71,9 +79,9 @@ export const HomeBoardPage: React.FC = () => {
 
         {loadState === "loaded" && data?.students && (
           <>
-            {allStudents.map((s) => (
-              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} />
-            ))}
+            {filterRollState === "all"
+              ? allStudents.map((s) => <StudentListTile onStateChange={onStateChange} key={s.id} isRollMode={isRollMode} student={s} />)
+              : allStudents.map((s) => s.status === filterRollState && <StudentListTile onStateChange={onStateChange} key={s.id} isRollMode={isRollMode} student={s} />)}
           </>
         )}
 
@@ -83,7 +91,7 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
       </S.PageContainer>
-      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} />
+      <ActiveRollOverlay filterStudentOnRoll={filterStudentOnRoll} allStudents={allStudents} isActive={isRollMode} onItemClick={onActiveRollAction} />
     </>
   )
 }
