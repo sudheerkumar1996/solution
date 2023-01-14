@@ -26,17 +26,16 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   enabled: boolean
-  handleChange: () => void
+  handleChange: (id:number) => void
   activity: Info
 }
 export const ControlledAccordion: React.FC<Props> = (props) => {
-  const { activity } = props
+  const { activity, handleChange, enabled } = props
   const classes = useStyles()
-  const [expanded, setExpanded] = React.useState<boolean>(false)
 
   return (
     <div className={classes.root}>
-      <Accordion>
+      <Accordion expanded={enabled} onChange={() => handleChange(activity.id)}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
           <Typography className={classes.heading}>{activity.name}</Typography>
           <Typography className={classes.secondaryHeading}>{moment(activity.completed_at).format("d MMMM YYYY, hh:mm:ss")}</Typography>

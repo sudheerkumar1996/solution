@@ -66,6 +66,7 @@ export const HomeBoardPage: React.FC = () => {
           }
         })
       saveStudents(payload)
+      setIsRollMode(false)
     }
   }
   const onSearchName = (key: string) => {

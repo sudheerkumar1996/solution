@@ -83,7 +83,9 @@ export const TableComponent: React.FC<Props> = ({ students }) => {
                 {row.id}
               </TableCell>
               <TableCell align="left" style={{ display: "flex", alignItems: "center" }}>
-                <Avatar className={classes.small}>{PersonHelper.getFullName(row)[0]}</Avatar>
+                <Avatar style={{ background: getBgColor(row.status) }} className={classes.small}>
+                  {PersonHelper.getFullName(row)[0]}
+                </Avatar>
                 <span style={{ paddingLeft: 25 }}>{PersonHelper.getFullName(row)}</span>
               </TableCell>
               <TableCell style={{ color: getBgColor(row.status) }} align="left">

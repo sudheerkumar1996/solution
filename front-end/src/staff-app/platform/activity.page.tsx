@@ -35,7 +35,9 @@ export const ActivityPage: React.FC = () => {
   }, [data])
 
   console.log(activities)
-  const handleChange = () => {}
+  const handleChange = (id: number) => {
+    setActivities(activities.map((item) => (item.id === id ? { ...item, enable: !item.enable } : { ...item, enable: false })))
+  }
   return (
     <S.Container>
       <div>
@@ -46,12 +48,11 @@ export const ActivityPage: React.FC = () => {
         )}
         {loadState === "loaded" &&
           data?.activity &&
-          activities.map((activity, index) =>
-           <ControlledAccordion
-            key={activity.id}
-             handleChange={handleChange}
-              enabled={activity.enable} 
-              activity={activity} />)}
+          activities.map((activity, index) => (
+            <div key={activity.id} style={{ marginBottom: 10 }}>
+              <ControlledAccordion handleChange={handleChange} enabled={activity.enable} activity={activity} />
+            </div>
+          ))}
       </div>
     </S.Container>
   )
