@@ -1,4 +1,5 @@
 export function add<T>(key: LocalStorageKey, value: T) {
+  console.log(3, key, value)
   localStorage.setItem(key, JSON.stringify(value))
   return value
 }

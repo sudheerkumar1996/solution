@@ -14,7 +14,7 @@ import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
 import { filterStudentByName, sortHelperFun } from "shared/helpers/data-generation"
-import { ItemType } from "shared/models/roll"
+import { ItemType, Roll, RollInput } from "shared/models/roll"
 export const HomeBoardPage: React.FC = () => {
   const [filterRollState, setRollState] = useState<ItemType>("all")
   const [isRollMode, setIsRollMode] = useState(false)
@@ -22,10 +22,13 @@ export const HomeBoardPage: React.FC = () => {
   const [name, setName] = useState<StudentName>("first_name")
   const [ascending, setAscending] = useState<boolean>(true)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+  const [saveStudents, res, res_status, error] = useApi<{ roll: RollInput[] }>({ url: "save-roll" })
+
   const [allStudents, setStudents] = useState<Person[]>([])
   useEffect(() => {
     void getStudents()
   }, [getStudents])
+
   useEffect(() => {
     let students_ = data?.students || []
     setStudents(students_.sort((a, b) => (a.first_name > b.first_name ? 1 : -1)))
@@ -46,9 +49,23 @@ export const HomeBoardPage: React.FC = () => {
   }
 
   const onActiveRollAction = (action: ActiveRollAction) => {
-    console.log("fgkjgjgjh", action)
     if (action === "exit") {
       setIsRollMode(false)
+    }
+    if (action === "complete") {
+      let payload: RollInput = { student_roll_states: [] }
+      payload["student_roll_states"] = allStudents
+        .filter((f) => f.status === "late" || f.status === "absent" || f.status === "present")
+        .map((std) => {
+          return {
+            student_id: std.id,
+            roll_state: std.status,
+            first_name: std.first_name,
+            last_name: std.last_name,
+            photo_url: std.photo_url,
+          }
+        })
+      saveStudents(payload)
     }
   }
   const onSearchName = (key: string) => {

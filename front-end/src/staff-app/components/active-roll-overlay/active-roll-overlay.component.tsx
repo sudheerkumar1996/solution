@@ -5,7 +5,7 @@ import { BorderRadius, Spacing } from "shared/styles/styles"
 import { RollStateList } from "staff-app/components/roll-state/roll-state-list.component"
 import { Person } from "shared/models/person"
 import { ItemType } from "shared/models/roll"
-export type ActiveRollAction = "filter" | "exit"
+export type ActiveRollAction = "filter" | "exit" | "complete"
 interface Props {
   allStudents: Person[]
   isActive: boolean
@@ -34,7 +34,7 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("exit")}>
+            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("complete")}>
               Complete
             </Button>
           </div>

@@ -13,6 +13,7 @@ export function useApi<ReturnType = {}>({ url, initialLoadState = "loading" }: O
   const [state, dispatch] = useReducer(stateReducer<ReturnType>(), { data: undefined, loadState: initialLoadState, error: undefined })
   const callApi = useCallback(
     async (params?: object) => {
+      console.log(1,params)
       dispatch({ type: "loading" })
       function process(result: ApiResponse<ReturnType>) {
         if (result.success) {
