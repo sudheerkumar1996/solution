@@ -3,13 +3,13 @@ import { makeStyles } from "@material-ui/core/styles"
 import { Table, TableRow, TableBody, TableCell, TableContainer, TableHead } from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import { Person, PersonHelper } from "shared/models/person"
-import Typography from "@material-ui/core/Typography/Typography"
 import Avatar from "@material-ui/core/Avatar"
 import Pagination from "@material-ui/lab/Pagination"
+import { getBgColor } from "staff-app/components/roll-state/roll-state-icon.component"
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650,
+    minWidth: 400,
   },
   small: {
     width: theme.spacing(3),
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   customPagination: {
     width: "fit-content",
     marginLeft: "auto",
-    marginTop: "5px",
+    marginTop: "10px",
     "& .MuiPaginationItem-page.Mui-selected": {
       border: "0.5px solid #707070",
       margin: "0 10px",
@@ -67,7 +67,7 @@ export const TableComponent: React.FC<Props> = ({ students }) => {
 
   const classes = useStyles()
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
@@ -84,9 +84,11 @@ export const TableComponent: React.FC<Props> = ({ students }) => {
               </TableCell>
               <TableCell align="left" style={{ display: "flex", alignItems: "center" }}>
                 <Avatar className={classes.small}>{PersonHelper.getFullName(row)[0]}</Avatar>
-                <span style={{ paddingLeft: 5 }}>{PersonHelper.getFullName(row)}</span>
+                <span style={{ paddingLeft: 25 }}>{PersonHelper.getFullName(row)}</span>
               </TableCell>
-              <TableCell align="left">{row.status}</TableCell>
+              <TableCell style={{ color: getBgColor(row.status) }} align="left">
+                {row.status}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
