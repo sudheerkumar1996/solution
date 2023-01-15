@@ -1,4 +1,5 @@
 import { getRandomInt, generateRange } from "shared/helpers/math-utils"
+import { Info, Activity } from "shared/models/activity"
 import { Person, StudentName, PersonHelper } from "shared/models/person"
 import { RollInput } from "shared/models/roll"
 const nameTokens = ["Alan", "John", "Brandon", "Key", "Branda", "Morris", "Carlos", "Lee"]
@@ -36,4 +37,23 @@ export const completedRoll = (allStudents: Person[]) => {
       }
     })
   return payload
+}
+
+export const modifyActivityData = (activity: Activity[]) => {
+  let data: Info[] = activity.map((item) => {
+    return {
+      completed_at: item.entity.completed_at,
+      name: item.entity.name,
+      id: item.entity.id,
+      enable: false,
+      students: item.entity.student_roll_states.map((std) => ({
+        id: std.student_id,
+        first_name: std.first_name,
+        last_name: std.last_name,
+        photo_url: std.photo_url,
+        status: std.roll_state,
+      })),
+    }
+  })
+  return data
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
-import { Table, TableRow, TableBody, TableCell, TableContainer, TableHead } from "@material-ui/core"
-import Paper from "@material-ui/core/Paper"
+import { Table, TableRow, TableBody, TableCell, TableContainer, TableHead, Chip } from "@material-ui/core"
 import { Person, PersonHelper } from "shared/models/person"
 import Avatar from "@material-ui/core/Avatar"
 import Pagination from "@material-ui/lab/Pagination"
@@ -38,6 +37,13 @@ const useStyles = makeStyles((theme) => ({
       opacity: 0.6,
     },
   },
+  nameIcon: {
+    display: "flex",
+    alignItems: "center",
+  },
+  text: {
+    paddingLeft: 25,
+  },
 }))
 
 interface Props {
@@ -51,7 +57,6 @@ export const TableComponent: React.FC<Props> = ({ students }) => {
   useEffect(() => {
     setMasterdata([...students])
     let newdata = [...students].slice((page - 1) * 5, (page - 1) * 5 + 5)
-
     if (newdata.length === 0) {
       let firstPageData = [...students].slice(0, 5)
       setPage(1)
@@ -82,14 +87,16 @@ export const TableComponent: React.FC<Props> = ({ students }) => {
               <TableCell component="th" scope="row">
                 {row.id}
               </TableCell>
-              <TableCell align="left" style={{ display: "flex", alignItems: "center" }}>
-                <Avatar style={{ background: getBgColor(row.status) }} className={classes.small}>
-                  {PersonHelper.getFullName(row)[0]}
-                </Avatar>
-                <span style={{ paddingLeft: 25 }}>{PersonHelper.getFullName(row)}</span>
+              <TableCell align="left">
+                <div className={classes.nameIcon}>
+                  <Avatar style={{ background: getBgColor(row.status) }} className={classes.small}>
+                    {PersonHelper.getFullName(row)[0]}
+                  </Avatar>
+                  <span className={classes.text}>{PersonHelper.getFullName(row)}</span>
+                </div>
               </TableCell>
-              <TableCell style={{ color: getBgColor(row.status) }} align="left">
-                {row.status}
+              <TableCell align="left">
+                <Chip style={{ color: getBgColor(row.status), textTransform: "capitalize", fontWeight: "bold" }} disabled label={row.status} />
               </TableCell>
             </TableRow>
           ))}

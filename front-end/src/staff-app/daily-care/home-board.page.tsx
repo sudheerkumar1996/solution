@@ -106,7 +106,7 @@ type ToolbarAction = "roll" | "sort" | "toggle"
 interface ToolbarProps {
   ascending: boolean
   name: StudentName
-  onItemClick: (action: ToolbarAction, value: StudentName) => void
+  onItemClick: (action: ToolbarAction, value: StudentName | any) => void
   searchKey: string
   onSearchName: (key: string) => void
 }

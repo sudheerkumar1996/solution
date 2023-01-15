@@ -9,7 +9,7 @@ export interface Activity {
 }
 
 export interface Info {
-  id?: number
+  id: number
   name?: string
   completed_at: Date
   students: Person[]

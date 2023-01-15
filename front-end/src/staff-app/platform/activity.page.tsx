@@ -6,6 +6,7 @@ import { Activity, Info } from "shared/models/activity"
 import { ControlledAccordion } from "staff-app/components/Accordion/accordion.component"
 import { CenteredContainer } from "shared/components/centered-container/centered-container.component"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { modifyActivityData } from "shared/helpers/data-generation"
 
 export const ActivityPage: React.FC = () => {
   const [activities, setActivities] = useState<Info[]>([])
@@ -15,23 +16,7 @@ export const ActivityPage: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    let data_ = [...(data?.activity || [])]
-    let modifiedData: Info[] = data_.map((item) => {
-      return {
-        completed_at: item.entity.completed_at,
-        name: item.entity.name,
-        id: item.entity.id,
-        enable: false,
-        students: item.entity.student_roll_states.map((std) => ({
-          id: std.student_id,
-          first_name: std.first_name,
-          last_name: std.last_name,
-          photo_url: std.photo_url,
-          status: std.roll_state,
-        })),
-      }
-    })
-    setActivities(modifiedData)
+    setActivities(modifyActivityData(data?.activity || []))
   }, [data])
 
   console.log(activities)
@@ -48,11 +33,7 @@ export const ActivityPage: React.FC = () => {
         )}
         {loadState === "loaded" &&
           data?.activity &&
-          activities.map((activity, index) => (
-            <div key={activity.id} style={{ marginBottom: 10 }}>
-              <ControlledAccordion handleChange={handleChange} enabled={activity.enable} activity={activity} />
-            </div>
-          ))}
+          activities.map((activity) => <ControlledAccordion handleChange={handleChange} enabled={activity.enable} activity={activity} />)}
       </div>
     </S.Container>
   )

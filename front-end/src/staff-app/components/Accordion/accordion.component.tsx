@@ -12,6 +12,7 @@ import { TableComponent } from "shared/components/Table/table.component"
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    marginBottom: 10,
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   enabled: boolean
-  handleChange: (id:number) => void
+  handleChange: (id: number) => void
   activity: Info
 }
 export const ControlledAccordion: React.FC<Props> = (props) => {
@@ -38,7 +39,7 @@ export const ControlledAccordion: React.FC<Props> = (props) => {
       <Accordion expanded={enabled} onChange={() => handleChange(activity.id)}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
           <Typography className={classes.heading}>{activity.name}</Typography>
-          <Typography className={classes.secondaryHeading}>{moment(activity.completed_at).format("d MMMM YYYY, hh:mm:ss")}</Typography>
+          <Typography className={classes.secondaryHeading}>{moment(activity.completed_at).format("MMM Do, YYYY [at] h:mm A z")}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <TableComponent students={activity.students} />
