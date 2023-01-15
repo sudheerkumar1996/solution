@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import Button from "@material-ui/core/ButtonBase"
 import InputBase from "@material-ui/core/InputBase"
-import { RadioGroup, Radio, FormControlLabel } from "@material-ui/core"
+import { RadioGroup, FormControlLabel } from "@material-ui/core"
+import Radio from "@material-ui/core/Radio"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
 import { Colors } from "shared/styles/colors"
@@ -123,8 +124,8 @@ const Toolbar: React.FC<ToolbarProps> = (props) => {
         {ascending ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
       </div>
       <RadioGroup style={{ margin: 0 }} row aria-label="first-last-name" name="first-last-name" onChange={(e) => onItemClick("toggle", e.target.value)} value={name}>
-        <FormControlLabel value="first_name" control={<Radio size="small" />} label="First Name" />
-        <FormControlLabel value="last_name" control={<Radio size="small" />} label="Last Name" />
+        <FormControlLabel value="first_name" control={<S.RadioButton size="small" />} label="First Name" />
+        <FormControlLabel value="last_name" control={<S.RadioButton size="small" />} label="Last Name" />
       </RadioGroup>
 
       <S.TextField
@@ -173,6 +174,14 @@ const S = {
       height: 30px;
       width: 200px;
       margin: 0;
+    }
+  `,
+  RadioButton: styled(Radio)`
+    && {
+      color: white;
+      &.Mui-checked {
+        color: white;
+      }
     }
   `,
 }
