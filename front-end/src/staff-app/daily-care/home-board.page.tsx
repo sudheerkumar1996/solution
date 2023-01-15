@@ -22,7 +22,7 @@ export const HomeBoardPage: React.FC = () => {
   const [name, setName] = useState<StudentName>("first_name")
   const [ascending, setAscending] = useState<boolean>(true)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
-  const [saveStudents, res, res_status, error] = useApi<{ roll: RollInput[] }>({ url: "save-roll" })
+  const [saveStudents] = useApi<{ roll: RollInput[] }>({ url: "save-roll" })
 
   const [allStudents, setStudents] = useState<Person[]>([])
   useEffect(() => {
@@ -37,12 +37,10 @@ export const HomeBoardPage: React.FC = () => {
   const onToolbarAction = (action: ToolbarAction, value: StudentName) => {
     if (action === "roll") {
       setIsRollMode(true)
-    }
-    if (action === "sort") {
+    } else if (action === "sort") {
       setStudents(sortHelperFun(!ascending, allStudents, name))
       setAscending(!ascending)
-    }
-    if (action === "toggle") {
+    } else {
       setStudents(sortHelperFun(ascending, allStudents, value))
       setName(value)
     }
@@ -51,8 +49,7 @@ export const HomeBoardPage: React.FC = () => {
   const onActiveRollAction = (action: ActiveRollAction) => {
     if (action === "exit") {
       setIsRollMode(false)
-    }
-    if (action === "complete") {
+    } else {
       saveStudents(completedRoll(allStudents))
       setIsRollMode(false)
     }
@@ -66,12 +63,15 @@ export const HomeBoardPage: React.FC = () => {
       setStudents(sortHelperFun(ascending, all_students, name))
     }
   }
+
   const onStateChange = (student: Person) => {
     setStudents(allStudents.map((std) => (std.id === student.id ? student : std)))
   }
+
   const filterStudentOnRoll = (type: ItemType) => {
     setRollState(type)
   }
+
   return (
     <>
       <S.PageContainer>
@@ -120,10 +120,9 @@ const Toolbar: React.FC<ToolbarProps> = (props) => {
           onItemClick("sort", name)
         }}
       >
-        {" "}
         {ascending ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
       </div>
-      <RadioGroup row aria-label="first-last-name" name="first-last-name" onChange={(e) => onItemClick("toggle", e.target.value)} value={name}>
+      <RadioGroup style={{ margin: 0 }} row aria-label="first-last-name" name="first-last-name" onChange={(e) => onItemClick("toggle", e.target.value)} value={name}>
         <FormControlLabel value="first_name" control={<Radio size="small" />} label="First Name" />
         <FormControlLabel value="last_name" control={<Radio size="small" />} label="Last Name" />
       </RadioGroup>
@@ -172,7 +171,7 @@ const S = {
       border-radius: ${BorderRadius.default};
       background-color: white;
       height: 30px;
-      width: 100px;
+      width: 200px;
       margin: 0;
     }
   `,
