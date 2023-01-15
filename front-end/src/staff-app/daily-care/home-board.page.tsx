@@ -13,7 +13,7 @@ import { StudentListTile } from "staff-app/components/student-list-tile/student-
 import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import { filterStudentByName, sortHelperFun } from "shared/helpers/data-generation"
+import { completedRoll, filterStudentByName, sortHelperFun } from "shared/helpers/data-generation"
 import { ItemType, Roll, RollInput } from "shared/models/roll"
 export const HomeBoardPage: React.FC = () => {
   const [filterRollState, setRollState] = useState<ItemType>("all")
@@ -53,19 +53,7 @@ export const HomeBoardPage: React.FC = () => {
       setIsRollMode(false)
     }
     if (action === "complete") {
-      let payload: RollInput = { student_roll_states: [] }
-      payload["student_roll_states"] = allStudents
-        .filter((f) => f.status === "late" || f.status === "absent" || f.status === "present")
-        .map((std) => {
-          return {
-            student_id: std.id,
-            roll_state: std.status,
-            first_name: std.first_name,
-            last_name: std.last_name,
-            photo_url: std.photo_url,
-          }
-        })
-      saveStudents(payload)
+      saveStudents(completedRoll(allStudents))
       setIsRollMode(false)
     }
   }
