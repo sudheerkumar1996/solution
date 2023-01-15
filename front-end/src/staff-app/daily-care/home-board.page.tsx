@@ -172,7 +172,7 @@ const S = {
       border-radius: ${BorderRadius.default};
       background-color: white;
       height: 30px;
-      width: 200px;
+      width: 220px;
       margin: 0;
     }
   `,
